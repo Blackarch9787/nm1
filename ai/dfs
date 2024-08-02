@@ -1,0 +1,23 @@
+import matplotlib.pyplot as plt
+import networkx as nx
+def dfs(graph, node, goal, path=None):
+path = path or [node]
+if node == goal:
+return path
+for neighbor in graph[node]:
+if neighbor not in path:
+if new_path := dfs(graph, neighbor, goal, path + [neighbor]):
+return new_path
+def visualize_graph(graph, path=None):
+G = nx.Graph(graph)
+pos = nx.spring_layout(G)
+nx.draw(G, pos, with_labels=True, node_size=700, node_color='skyblue', font_weight='bold', font_size=12)
+if path:
+nx.draw_networkx_edges(G, pos, edgelist=[(path[i], path[i+1]) for i in range(len(path)-1)], edge_color='r',
+width=2)
+plt.axis('off')
+plt.show()
+graph = {'A': ['B', 'C'], 'B': ['A', 'D', 'E'], 'C': ['A', 'F'], 'D': ['B'], 'E': ['B', 'F'], 'F': ['C', 'E']}
+start_node, goal_node = 'A', 'F'
+print("DFS Path:", dfs(graph, start_node, goal_node))
+visualize_graph(graph, dfs(graph, start_node, goal_node))
